@@ -1,28 +1,30 @@
-# Face Detector
 
+---
 
-This project implements a real-time human counting and face recognition system using **OpenCV** and the **face_recognition** library. The system can detect and count people in a video stream, recognize registered faces, and display their names on the screen.
+# Face Recognition System
+
+A real-time face recognition system built using OpenCV, Tkinter, and Python. This system can detect and recognize multiple faces in a video stream, register new faces, and maintain an attendance log. It is designed for ease of use and extensibility.
 
 ---
 
 ## Features
 
-- **Real-time Face Detection**: Detects faces in a video stream using OpenCV.
-- **Face Recognition**: Recognizes registered faces and displays their names.
-- **People Counting**: Counts the number of people detected in the frame.
-- **Face Registration**: Allows adding new faces to the system by capturing an image and assigning a name.
-- **Logging**: Logs the count of people and timestamps to a CSV file for analysis.
+- **Real-Time Face Detection**: Detects multiple faces in a live video stream.
+- **Face Recognition**: Recognizes registered faces and labels them in real-time.
+- **Attendance Tracking**: Automatically logs the first and last seen timestamps for recognized faces.
+- **Database Management**: Add, delete, and manage registered faces.
+- **Export Attendance**: Export attendance logs to a CSV file.
+- **Customizable Settings**: Adjust recognition tolerance and confidence thresholds.
+- **User-Friendly GUI**: Built with Tkinter for easy interaction.
 
 ---
 
 ## Requirements
 
-- Python 3.7 or higher
+- Python 3.7+
 - OpenCV (`opencv-python`)
-- `face_recognition` library
-- `numpy`
-- `dlib` (for face recognition)
-- `Pillow` (for image processing)
+- Pillow (`PIL`)
+- NumPy (`numpy`)
 
 ---
 
@@ -30,109 +32,97 @@ This project implements a real-time human counting and face recognition system u
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/4LPH7/Face_detector.git
-   cd Face_detector
+   git clone https://github.com/your-username/face-recognition-system.git
+   cd face-recognition-system
    ```
 
-2. **Set Up a Virtual Environment** (Optional but Recommended):
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install Dependencies**:
+2. **Install Dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
-   If `dlib` installation fails, follow these steps:
-   - Install **Microsoft C++ Build Tools** from [here](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
-   - Install CMake:
-     ```bash
-     pip install cmake
-     ```
-   - Retry installing `dlib`:
-     ```bash
-     pip install dlib
-     ```
+3. **Download Model Files**:
+   - Download the following files and place them in the project directory:
+     - [deploy.prototxt](https://raw.githubusercontent.com/opencv/opencv/master/samples/dnn/face_detector/deploy.prototxt)
+     - [res10_300x300_ssd_iter_140000_fp16.caffemodel](https://raw.githubusercontent.com/opencv/opencv_3rdparty/dnn_samples_face_detector_20180205_fp16/res10_300x300_ssd_iter_140000_fp16.caffemodel)
 
-4. **Download Precompiled `dlib`** (Optional):
-   If `dlib` installation fails, download a precompiled wheel from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#dlib) and install it:
+4. **Run the Application**:
    ```bash
-   pip install path_to_downloaded_whl_file
+   python face_recognition_system.py
    ```
 
 ---
 
 ## Usage
 
-1. **Prepare Known Faces**:
-   - Place images of known individuals in the `known_faces` directory.
-   - Name the files as `<person_name>.jpg` (e.g., `john.jpg`).
+### Main Interface
+- **Live Video Feed**: Displays the live video stream with detected faces.
+- **Capture Faces**: Click to capture and register new faces.
+- **Manage Database**: View and delete registered faces.
+- **Export Attendance**: Export the attendance log to a CSV file.
+- **Settings**: Adjust recognition tolerance and confidence thresholds.
+- **Quit**: Exit the application.
 
-2. **Run the Program**:
-   ```bash
-   python main.py
-   ```
+### Registering a New Face
+1. Click the **Capture Faces** button.
+2. Enter the name of the detected face when prompted.
+3. The system will save the face and add it to the database.
 
-3. **Controls**:
-   - **Press 'q'**: Quit the application.
-   - **Press 'a'**: Add a new face. The system will capture the current frame and prompt you to enter a name.
-   - **Press 's'**: Save the current count and timestamp to the log file (`logs/count_log.csv`).
+### Managing the Database
+1. Click the **Manage Database** button.
+2. Select a name from the list and click **Delete Selected** to remove it.
 
-4. **View Logs**:
-   - The count and timestamp are saved in `logs/count_log.csv`.
+### Exporting Attendance
+1. Click the **Export Attendance** button.
+2. The attendance log will be saved to `attendance.csv`.
 
 ---
 
-## Project Structure
+## File Structure
 
 ```
-human-counting-face-recognition/
-├── known_faces/           # Directory to store known face images
-├── logs/                  # Directory to store count logs
-├── main.py                # Main application file
-├── face_processor.py      # Face detection and recognition module
-├── counter.py             # People counting module
-├── utils.py               # Utility functions
-├── requirements.txt       # List of dependencies
-└── README.md              # Project documentation
+face-recognition-system/
+├── known_faces/               # Directory for registered face images
+├── face_encodings.pkl         # Database of face encodings
+├── deploy.prototxt            # Face detection model configuration
+├── res10_300x300_ssd_iter_140000_fp16.caffemodel  # Face detection model weights
+├── face_recognition_system.py # Main application script
+└── attendance.csv             # Attendance log
 ```
 
 ---
 
-## Example
+## Customization
 
-1. Add a known face:
-   - Place an image of a person in the `known_faces` directory (e.g., `john.jpg`).
-   - Run the program, and the system will recognize the person as "John".
+### Adjusting Recognition Parameters
+- **Recognition Tolerance**: Lower values make recognition stricter.
+- **Confidence Threshold**: Adjust the minimum confidence for face detection.
 
-2. Add a new face:
-   - Press 'a' to capture a new face and assign a name (e.g., "Alice").
-   - The system will save the face image and recognize it in future frames.
-
-3. View logs:
-   - The `logs/count_log.csv` file will contain entries like:
-     ```
-     2024-01-01 12:34:56,3
-     2024-01-01 12:35:10,2
-     ```
+### Adding New Features
+- **Deep Learning Models**: Replace the LBP-based recognition with a deep learning model for better accuracy.
+- **Network Camera Support**: Modify the video capture to work with IP cameras.
+- **Advanced Anti-Spoofing**: Add liveness detection to prevent spoofing.
 
 ---
 
-## Future Enhancements
+## Troubleshooting
 
-- **Movement Tracking**: Track the movement of people in the frame.
-- **Multiple Camera Support**: Extend the system to work with multiple cameras.
-- **Web Interface**: Create a web-based dashboard for monitoring.
-- **Alert System**: Send alerts for unauthorized persons or overcrowding.
-- **Crowd Density Analysis**: Analyze crowd density in real-time.
+### Common Issues
+1. **Missing Model Files**:
+   - Ensure `deploy.prototxt` and `res10_300x300_ssd_iter_140000_fp16.caffemodel` are in the project directory.
+
+2. **GUI Not Displaying**:
+   - Ensure OpenCV is installed with GUI support (`opencv-python`, not `opencv-python-headless`).
+
+3. **Face Recognition Errors**:
+   - Ensure faces are well-lit and clearly visible.
+   - Adjust the recognition tolerance and confidence thresholds in the settings.
 
 ---
 
 ## Contributing
 
-Contributions are welcome! If you'd like to contribute, please follow these steps:
+Contributions are welcome! Please follow these steps:
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature/YourFeature`).
 3. Commit your changes (`git commit -m 'Add some feature'`).
@@ -149,17 +139,19 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Acknowledgments
 
-- [OpenCV](https://opencv.org/) for computer vision capabilities.
-- [face_recognition](https://github.com/ageitgey/face_recognition) for face recognition.
-- [dlib](http://dlib.net/) for machine learning tools.
+- OpenCV for providing the face detection models.
+- Tkinter for the GUI framework.
+- Python for making it all possible.
 
 ---
+
 
 ## Author
 
 - GitHub: [@4LPH7](https://github.com/4LPH7)
 
 Feel free to contribute or suggest improvements!
+Let me know if you need further customization or additional sections!
 
 ---
 ### Show your support
